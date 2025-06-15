@@ -7,7 +7,7 @@ export const arcjetMiddleware = arcjet({
   rules: [
     shield({ mode: "LIVE" }),
     detectBot({
-      mode: "LIVE",
+      mode: process.env.ARCJET_ENV === "production" ? "LIVE" : "DRY_RUN",
       allow: ["CATEGORY:SEARCH_ENGINE"],
     }),
     tokenBucket({
