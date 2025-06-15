@@ -5,6 +5,7 @@ import ProductPage from "./pages/ProductPage";
 
 import { Routes, Route } from "react-router-dom";
 import { useThemeStore } from "./store/useThemeStore";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { theme } = useThemeStore();
@@ -18,6 +19,17 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductPage />} />
       </Routes>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          className: "bg-base-100 text-base-content",
+          style: {
+            fontSize: "1rem",
+            borderRadius: "0.5rem",
+            padding: "1rem",
+          },
+        }}/>
     </div>
   );
 }

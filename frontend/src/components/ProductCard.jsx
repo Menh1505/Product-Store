@@ -1,8 +1,10 @@
 import { EditIcon, Trash2Icon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useProductStore } from "../store/useProductStore";
 
 function ProductCard({product}) {
-  console.log(product)
+  const { deleteProduct } = useProductStore();
+
   return (
     <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
       {/* Product Image */}
@@ -20,7 +22,7 @@ function ProductCard({product}) {
           <Link to={`/product/${product.id}`} className="btn btn-sm btn-info btn-outline"> 
             <EditIcon className="size-4" />
           </Link>
-          <button className="btn btn-sm btn-error btn-outline">
+          <button className="btn btn-sm btn-error btn-outline" onClick={() => deleteProduct(product.id)}>
             <Trash2Icon className="size-4" />
           </button>
           </div>
