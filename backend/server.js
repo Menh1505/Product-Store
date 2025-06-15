@@ -7,11 +7,16 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/product.routes.js";
 import { sql } from "./config/db.config.js";
 import { arcjetMiddleware } from "./lib/arcjet.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cors());
@@ -49,9 +54,22 @@ app.use(async (req, res, next) => {
   }
 });
 
+// API routes
 app.use("/api/products", productRoutes);
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-app.get("/", (req, res) => res.send("API server checked!"));
+
+if (process.env.NODE_ENV === "production") {
+  const frontendPath = path.resolve(__dirname, "..", "frontend", "dist");
+  console.log("Frontend static path:", frontendPath);
+  app.use(express.static(frontendPath));
+
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+
+  app.use((req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+}
 
 async function initDB() {
   try {
@@ -73,6 +91,6 @@ async function initDB() {
 
 initDB().then(() => {
   app.listen(PORT, () => {
-    console.log("Server is running on http://localhost: " + PORT);
+    console.log("Server is running on http://localhost:" + PORT);
   });
 });
